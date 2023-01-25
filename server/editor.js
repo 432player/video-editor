@@ -7,7 +7,7 @@ const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const probe = require('node-ffprobe');
-var http = require('http');
+var http = require('https');
 const fs = require('fs');
 const url = require('url');
 
@@ -45,12 +45,23 @@ router.get('/mute-audio', function (req, res) {
 
                 console.log("Conversion Done");
                 let baseLink = 'https://appums-video-editor.herokuapp.com/videos/output.mp4';
-                const file = fs.createWriteStream(baseLink);
-                res.pipe(file);
-                file.on("finish", () => {
-                    file.close();
-                    console.log("Download Completed");
+
+                const request = http.get(baseLink, function (response) {
+                    response.pipe(file);
+
+                    // after download completed close filestream
+                    file.on("finish", () => {
+                        file.close();
+                        console.log("Download Completed");
+                    });
                 });
+
+                // const file = fs.createWriteStream(baseLink);
+                // res.pipe(file);
+                // file.on("finish", () => {
+                //     file.close();
+                //     console.log("Download Completed");
+                // });
                 // const request = http.get(baseLink, function (response) {
                 //     response.pipe(file);
 

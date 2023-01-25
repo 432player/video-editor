@@ -38,23 +38,27 @@ router.get('/mute-audio', function (req, res) {
     ffmpeg('videos/input.mp4') //Input Video File
         .output('videos/output.mp4') // Output File
         .noAudio().videoCodec('copy')
+        .on('error', function (err) {
+            console.log('error: ', +err);
+
+        })
         .on('end', function (err) {
             if (err)
                 console.log(err)
             else if (!err) {
 
                 console.log("Conversion Done");
-                let baseLink = 'https://appums-video-editor.herokuapp.com/videos/output.mp4';
+                // let baseLink = 'https://appums-video-editor.herokuapp.com/videos/output.mp4';
 
-                const request = http.get(baseLink, function (response) {
-                    response.pipe(file);
+                // const request = http.get(baseLink, function (response) {
+                //     response.pipe(file);
 
-                    // after download completed close filestream
-                    file.on("finish", () => {
-                        file.close();
-                        console.log("Download Completed");
-                    });
-                });
+                //     // after download completed close filestream
+                //     file.on("finish", () => {
+                //         file.close();
+                //         console.log("Download Completed");
+                //     });
+                // });
 
                 // const file = fs.createWriteStream(baseLink);
                 // res.pipe(file);
@@ -74,12 +78,7 @@ router.get('/mute-audio', function (req, res) {
                 // res.send(baseLink);
 
             }
-
-        })
-        .on('error', function (err) {
-            console.log('error: ', +err);
-
-        }).run();
+        }).writeToStream(res, { end: true });
 });
 
 /* worked */

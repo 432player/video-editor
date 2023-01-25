@@ -16,10 +16,10 @@ const router = express.Router();
 module.exports = function (app) {
     app.use('/editor', router);
 
-    app.get('/download', function(req, res){
-        const file = 'videos/output.mp4';
-        res.download(file); // Set disposition and send it.
-      });
+    // app.get('/download', function(req, res){
+    //     const file = 'videos/output.mp4';
+    //     res.download(file); // Set disposition and send it.
+    //   });
 };
 
 router.use(bodyParser.json());
@@ -54,39 +54,9 @@ router.get('/mute-audio', function (req, res) {
 
                 console.log("Conversion Done");
                 let baseLink = 'https://appums-video-editor.herokuapp.com/videos/output.mp4';
-
-                // const request = http.get(baseLink, function (response) {
-                //     response.pipe(file);
-
-                //     // after download completed close filestream
-                //     file.on("finish", () => {
-                //         file.close();
-                //         console.log("Download Completed");
-                //     });
-                // });
-
-                // const file = fs.createWriteStream(baseLink);
-                // res.pipe(file);
-                // file.on("finish", () => {
-                //     file.close();
-                //     console.log("Download Completed");
-                // });
-                // const file = fs.createWriteStream("newvide.mp4");
-                // const request = http.get(baseLink, function (response) {
-                //     response.pipe(file);
-
-                //     // after download completed close filestream
-                //     file.on("finish", () => {
-                //         file.close();
-                //         console.log("Download Completed");
-                //     });
-                // });
-
                 const file = 'videos/output.mp4';
                 res.download(file); // Set disposition and send it.
-                
                 // res.send(baseLink);
-
             }
         }).run();
 });
@@ -164,7 +134,7 @@ router.get('/video-crop', function (req, res) {
         }
     });
 
-    ffmpeg('videos/input.mp4') //Input Video File
+    ffmpeg('videos/440_1280x720.mp4') //Input Video File
         .output('videos/output.mp4') // Output File
         .audioCodec('libmp3lame') // Audio Codec
         .videoCodec('libx264') // Video Codec
@@ -347,16 +317,3 @@ router.get('/watermark', function (req, res) {
             //callback(err);
         }).run();
 });
-
-var download = function (url, dest, cb) {
-    var file = fs.createWriteStream(dest);
-    var request = http.get(url, function (response) {
-        response.pipe(file);
-        file.on('finish', function () {
-            file.close(cb);  // close() is async, call cb after close completes.
-        });
-    }).on('error', function (err) { // Handle errors
-        fs.unlink(dest); // Delete the file async. (But we don't check the result)
-        if (cb) cb(err.message);
-    });
-};

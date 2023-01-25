@@ -16,10 +16,10 @@ const router = express.Router();
 module.exports = function (app) {
     app.use('/editor', router);
 
-    app.get('/download', function(req, res){
+    app.get('/download', function (req, res) {
         const file = 'videos/output.mp4';
         res.download(file); // Set disposition and send it.
-      });
+    });
 };
 
 router.use(bodyParser.json());
@@ -135,7 +135,7 @@ router.get('/video-crop', function (req, res) {
     });
 
     ffmpeg('videos/input.mp4') //Input Video File
-        .output('videos/output.mp4') // Output File
+        .output('videos/output1.mp4') // Output File
         .audioCodec('libmp3lame') // Audio Codec
         .videoCodec('libx264') // Video Codec
         .setStartTime(03) // Start Position
@@ -143,9 +143,36 @@ router.get('/video-crop', function (req, res) {
         .on('end', function (err) {
             if (!err) {
 
-                console.log("Conversion Done");
-                res.send('Video Cropping Done');
+                ffmpeg('videos/input.mp4') //Input Video File
+                    .output('videos/output2.mp4') // Output File
+                    .audioCodec('libmp3lame') // Audio Codec
+                    .videoCodec('libx264') // Video Codec
+                    .setStartTime(10) // Start Position
+                    .setDuration(5) // Duration
+                    .on('end', function (err) {
+                        if (!err) {
+                            console.log("Conversion Done");
+                            const files = ['videos/output1.mp4', 'videos/output2.mp4'];
+                            const outputFile = 'output.mp4';
+                            ffmpeg()
+                                .input(files)
+                                .on('start', function (commandLine) {
+                                    console.log('Spawned Ffmpeg with command: ' + commandLine);
+                                })
+                                .on('error', function (err) {
+                                    console.log('An error occurred: ' + err.message);
+                                })
+                                .on('end', function () {
+                                    console.log('Merging finished !');
+                                })
+                                .save(outputFile);
+                        }
 
+                    })
+                    .on('error', function (err) {
+                        console.log('error: ', +err);
+
+                    }).run();
             }
 
         })

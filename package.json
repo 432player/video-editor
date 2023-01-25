@@ -16,7 +16,7 @@
     "fs": "0.0.1-security",
     "mkdirp": "^0.5.1",
     "node-ffprobe": "^1.2.2",
-    "nodemon": "^1.18.11",
+    "nodemon": "^2.0.20",
     "querystring": "^0.2.0",
     "url": "^0.11.0"
   }

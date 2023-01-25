@@ -2,7 +2,10 @@ const express = require('express');
 const promise = require("bluebird");
 const bodyParser = require('body-parser');
 const querystring = require('querystring');
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfmpegPath(ffmpegPath);
+
 const probe = require('node-ffprobe');
 const fs = require('fs');
 const url = require('url');

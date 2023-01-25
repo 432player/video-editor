@@ -43,7 +43,8 @@ router.get('/mute-audio', function (req, res) {
             else if (!err) {
 
                 console.log("Conversion Done");
-                res.send('Remove Audio is Done');
+                let baseLink = 'https://appums-video-editor.herokuapp.com/videos/output.mp4'
+                res.send(baseLink);
 
             }
 

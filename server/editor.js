@@ -134,7 +134,7 @@ router.get('/video-crop', function (req, res) {
         }
     });
 
-    ffmpeg('videos/440_1280x720.mp4') //Input Video File
+    ffmpeg('videos/input.mp4') //Input Video File
         .output('videos/output.mp4') // Output File
         .audioCodec('libmp3lame') // Audio Codec
         .videoCodec('libx264') // Video Codec

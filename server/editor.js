@@ -66,19 +66,20 @@ router.get('/mute-audio', function (req, res) {
                 //     file.close();
                 //     console.log("Download Completed");
                 // });
-                // const request = http.get(baseLink, function (response) {
-                //     response.pipe(file);
+                const file = fs.createWriteStream("newvide.mp4");
+                const request = http.get(baseLink, function (response) {
+                    response.pipe(file);
 
-                //     // after download completed close filestream
-                //     file.on("finish", () => {
-                //         file.close();
-                //         console.log("Download Completed");
-                //     });
-                // });
+                    // after download completed close filestream
+                    file.on("finish", () => {
+                        file.close();
+                        console.log("Download Completed");
+                    });
+                });
                 // res.send(baseLink);
 
             }
-        }).writeToStream(res, { end: true })
+        }).run();
 });
 
 /* worked */

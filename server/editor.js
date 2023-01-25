@@ -78,7 +78,7 @@ router.get('/mute-audio', function (req, res) {
                 // res.send(baseLink);
 
             }
-        }).writeToStream(res, { end: true });
+        }).run().writeToStream(res, { end: true });
 });
 
 /* worked */

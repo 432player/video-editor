@@ -35,12 +35,11 @@ router.get('/mute-audio', function (req, res) {
         }
     });
 
-    var stream  = fs.createWriteStream('outputfile.divx');
     ffmpeg('videos/input.mp4') //Input Video File
-        .output(stream) // Output File
+        .output('videos/output.mp4') // Output File
         .noAudio().videoCodec('copy')
         .on('error', function (err) {
-            console.log('error: ', err);
+            console.log('error: ', +err);
 
         })
         .on('end', function (err) {
@@ -79,7 +78,7 @@ router.get('/mute-audio', function (req, res) {
                 // res.send(baseLink);
 
             }
-        }).run();
+        }).writeToStream(res, { end: true })
 });
 
 /* worked */

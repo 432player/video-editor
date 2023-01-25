@@ -46,7 +46,7 @@ router.get('/mute-audio', function (req, res) {
                 console.log("Conversion Done");
                 let baseLink = 'https://appums-video-editor.herokuapp.com/videos/output.mp4';
                 const file = fs.createWriteStream(baseLink);
-                response.pipe(file);
+                res.pipe(file);
                 file.on("finish", () => {
                     file.close();
                     console.log("Download Completed");

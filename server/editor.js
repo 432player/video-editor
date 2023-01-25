@@ -48,7 +48,7 @@ router.get('/mute-audio', function (req, res) {
             else if (!err) {
 
                 console.log("Conversion Done");
-                // let baseLink = 'https://appums-video-editor.herokuapp.com/videos/output.mp4';
+                let baseLink = 'https://appums-video-editor.herokuapp.com/videos/output.mp4';
 
                 // const request = http.get(baseLink, function (response) {
                 //     response.pipe(file);

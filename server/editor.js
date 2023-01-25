@@ -7,6 +7,7 @@ const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const probe = require('node-ffprobe');
+var http = require('http');
 const fs = require('fs');
 const url = require('url');
 
@@ -43,8 +44,23 @@ router.get('/mute-audio', function (req, res) {
             else if (!err) {
 
                 console.log("Conversion Done");
-                let baseLink = 'https://appums-video-editor.herokuapp.com/videos/output.mp4'
-                res.send(baseLink);
+                let baseLink = 'https://appums-video-editor.herokuapp.com/videos/output.mp4';
+                const file = fs.createWriteStream(baseLink);
+                response.pipe(file);
+                file.on("finish", () => {
+                    file.close();
+                    console.log("Download Completed");
+                });
+                // const request = http.get(baseLink, function (response) {
+                //     response.pipe(file);
+
+                //     // after download completed close filestream
+                //     file.on("finish", () => {
+                //         file.close();
+                //         console.log("Download Completed");
+                //     });
+                // });
+                // res.send(baseLink);
 
             }
 
@@ -282,20 +298,20 @@ router.get('/watermark', function (req, res) {
     }
     //const ffmpeg = require('fluent-ffmpeg'); 
     ffmpeg(__dirname + 'videos/input.mp4')
-    .videoFilters({
-        filter: 'drawtext',
-        options: {
-          fontfile:'videos/LucidaGrande.ttc',
-          text: 'THIS IS TEXT',
-          fontsize: 20,
-          fontcolor: 'white',
-          x: '(main_w/2-text_w/2)',
-          y: 50,
-          shadowcolor: 'black',
-          shadowx: 2,
-          shadowy: 2
-        }
-      })
+        .videoFilters({
+            filter: 'drawtext',
+            options: {
+                fontfile: 'videos/LucidaGrande.ttc',
+                text: 'THIS IS TEXT',
+                fontsize: 20,
+                fontcolor: 'white',
+                x: '(main_w/2-text_w/2)',
+                y: 50,
+                shadowcolor: 'black',
+                shadowx: 2,
+                shadowy: 2
+            }
+        })
         .output('./videos/watermark.mp4')
 
         .on('end', function (err) {
@@ -310,7 +326,17 @@ router.get('/watermark', function (req, res) {
             console.log('error: ', +err);
             //callback(err);
         }).run();
-
-
-
 });
+
+var download = function (url, dest, cb) {
+    var file = fs.createWriteStream(dest);
+    var request = http.get(url, function (response) {
+        response.pipe(file);
+        file.on('finish', function () {
+            file.close(cb);  // close() is async, call cb after close completes.
+        });
+    }).on('error', function (err) { // Handle errors
+        fs.unlink(dest); // Delete the file async. (But we don't check the result)
+        if (cb) cb(err.message);
+    });
+};

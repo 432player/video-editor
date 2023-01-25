@@ -152,7 +152,7 @@ router.get('/video-crop', function (req, res) {
                     .on('end', function (err) {
                         if (!err) {
                             console.log("Conversion Done");
-                            const files = ['videos/output1.mp4', 'videos/output2.mp4'];
+                            const files = ['output1.mp4', 'output2.mp4'];
                             const outputFile = 'output.mp4';
                             ffmpeg()
                                 .input(files)

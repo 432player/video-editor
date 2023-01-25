@@ -15,6 +15,11 @@ const router = express.Router();
 
 module.exports = function (app) {
     app.use('/editor', router);
+
+    app.get('/download', function(req, res){
+        const file = `${__dirname}/videos/output.mp4`;
+        res.download(file); // Set disposition and send it.
+      });
 };
 
 router.use(bodyParser.json());
@@ -76,6 +81,7 @@ router.get('/mute-audio', function (req, res) {
                         console.log("Download Completed");
                     });
                 });
+
                 // res.send(baseLink);
 
             }

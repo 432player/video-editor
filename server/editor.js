@@ -40,7 +40,7 @@ router.get('/mute-audio', function (req, res) {
         .output(stream) // Output File
         .noAudio().videoCodec('copy')
         .on('error', function (err) {
-            console.log('error: ', +err);
+            console.log('error: ', err);
 
         })
         .on('end', function (err) {
